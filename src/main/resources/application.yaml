@@ -1,0 +1,33 @@
+debug: false
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
+
+server:
+  port: 9090
+
+spring:
+
+  # jpa
+  jpa:
+    open-in-view: false
+    #defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create
+
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+
+  #DB Connection
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://localhost:3308/board?useSSL=false&allowPublicKeyRetrieval=true&useUnicode=true&serverTimezone=Asia/Seoul
+#    username:
+#    password:
+
+
+  #sql.init.mode: always

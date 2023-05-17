@@ -2,6 +2,7 @@ package io.mykim.projectboardadmin.adminuser.entity;
 
 import io.mykim.projectboardadmin.config.jpa.AuditingField;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,5 +29,26 @@ public class AdminUser extends AuditingField {
     @Column(name = "admin_user_role", length = 50)
     private AdminUserRole adminUserRole;
 
+    @Builder
+    private AdminUser(String username, String password, String nickname, String email, AdminUserRole adminUserRole) {
+        this.username = username;
+        this.password = password;
+        this.nickname = nickname;
+        this.email = email;
+        this.adminUserRole = adminUserRole;
+    }
 
+    public static AdminUser of(String username, String password, String nickname, String email, AdminUserRole adminUserRole) {
+        return AdminUser.builder()
+                            .username(username)
+                            .password(password)
+                            .nickname(nickname)
+                            .email(email)
+                            .adminUserRole(adminUserRole)
+                            .build();
+    }
+
+    public void updateEmail(String email) {
+        this.email = email;
+    }
 }

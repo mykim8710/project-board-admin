@@ -17,7 +17,7 @@ public class AdminUser extends AuditingField {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "admin_user_id")
     private Long id;
-    @Column(name = "admin_user_name", length = 255, unique = true, nullable = false)
+    @Column(name = "admin_user_username", length = 255, unique = true, nullable = false)
     private String username;
     @Column(name = "admin_user_password", length = 255, nullable = false)
     private String password;

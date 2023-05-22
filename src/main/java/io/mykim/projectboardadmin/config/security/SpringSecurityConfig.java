@@ -1,5 +1,6 @@
 package io.mykim.projectboardadmin.config.security;
 
+import io.mykim.projectboardadmin.config.response.CommonResponseUtils;
 import io.mykim.projectboardadmin.config.security.handler.CustomAccessDeniedHandler;
 import io.mykim.projectboardadmin.config.security.handler.CustomAuthenticationEntryPoint;
 import io.mykim.projectboardadmin.config.security.handler.CustomAuthenticationFailureHandler;
@@ -33,6 +34,7 @@ public class SpringSecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JwtRefreshTokenService jwtRefreshTokenService;
     private final JwtProvider jwtProvider;
+    private final CommonResponseUtils commonResponseUtils;
 
     // add bean : password encoder
     @Bean
@@ -48,22 +50,22 @@ public class SpringSecurityConfig {
 
     // add bean : CustomAuthenticationSuccessHandler
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new CustomAuthenticationSuccessHandler(jwtProvider, jwtRefreshTokenService);
+        return new CustomAuthenticationSuccessHandler(jwtProvider, jwtRefreshTokenService, commonResponseUtils);
     }
 
     // add bean : CustomAuthenticationFailureHandler
     public AuthenticationFailureHandler authenticationFailureHandler() {
-        return new CustomAuthenticationFailureHandler();
+        return new CustomAuthenticationFailureHandler(commonResponseUtils);
     }
 
     // add bean : CustomAccessDeniedHandler
     public AccessDeniedHandler accessDeniedHandler() {
-        return new CustomAccessDeniedHandler();
+        return new CustomAccessDeniedHandler(commonResponseUtils);
     }
 
     // add bean : CustomAuthenticationEntryPoint
     public AuthenticationEntryPoint authenticationEntryPoint() {
-        return new CustomAuthenticationEntryPoint();
+        return new CustomAuthenticationEntryPoint(commonResponseUtils);
     }
 
     /**
@@ -92,7 +94,7 @@ public class SpringSecurityConfig {
      */
     @Bean
     public JwtAuthorizationFilter jwtAuthorizationFilter() throws Exception {
-        return new JwtAuthorizationFilter(authenticationManager());
+        return new JwtAuthorizationFilter(authenticationManager(), jwtProvider, jwtRefreshTokenService);
     }
 
     @Bean
@@ -122,22 +124,9 @@ public class SpringSecurityConfig {
         httpSecurity
                 .authorizeRequests()
 
-                // 접근권한 테스트
-//                // api authorization test
-//                .antMatchers("/api/auth/member/**").access("hasRole('ROLE_MASTER') or hasRole('ROLE_MANAGER')")
-//                .antMatchers("/api/auth/admin/**").access("hasRole('ROLE_MANAGER')")
 
-                // 인증 테스트
-
-
-//                // post authorization
-//                .antMatchers("/api/v1/posts/**").permitAll()
-//                .antMatchers("/api/v2/posts/**").access("hasRole('ROLE_MEMBER') or hasRole('ROLE_ADMIN')")
-
-
-
-                .antMatchers(HttpMethod.GET,"/").anonymous()
-                .antMatchers(HttpMethod.GET,"/error-page/*").permitAll()
+                .antMatchers(HttpMethod.GET,"/main").authenticated()    // 로그인 성공시 이동하는 url
+                .antMatchers(HttpMethod.GET,"/error-page/*", "/").permitAll()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll();  // static resource
 
         return httpSecurity.build();

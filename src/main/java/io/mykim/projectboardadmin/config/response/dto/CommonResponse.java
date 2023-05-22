@@ -1,6 +1,7 @@
 package io.mykim.projectboardadmin.config.response.dto;
 
 import io.mykim.projectboardadmin.config.response.enums.CustomErrorCode;
+import io.mykim.projectboardadmin.config.response.enums.CustomSuccessCode;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,5 +27,16 @@ public class CommonResponse<T> {
         this.data = data;
     }
 
+    public CommonResponse(CustomSuccessCode successCode) {
+        this.status = successCode.getStatus();
+        this.code = successCode.getCode();
+        this.message =successCode.getMessage();
+    }
+
+    public CommonResponse(int status, String code, String message) {
+        this.status = status;
+        this.code = code;
+        this.message = message;
+    }
 }
 

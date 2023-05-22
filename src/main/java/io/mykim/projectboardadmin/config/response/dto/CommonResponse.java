@@ -33,6 +33,13 @@ public class CommonResponse<T> {
         this.message =successCode.getMessage();
     }
 
+    public CommonResponse(CustomSuccessCode successCode, T data) {
+        this.status = successCode.getStatus();
+        this.code = successCode.getCode();
+        this.message =successCode.getMessage();
+        this.data = data;
+    }
+
     public CommonResponse(int status, String code, String message) {
         this.status = status;
         this.code = code;

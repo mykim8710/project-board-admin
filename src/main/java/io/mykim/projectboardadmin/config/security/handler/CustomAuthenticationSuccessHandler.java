@@ -4,6 +4,7 @@ import io.mykim.projectboardadmin.adminuser.entity.AdminUser;
 import io.mykim.projectboardadmin.config.response.CommonResponseUtils;
 import io.mykim.projectboardadmin.config.response.dto.CommonResponse;
 import io.mykim.projectboardadmin.config.response.enums.CustomSuccessCode;
+import io.mykim.projectboardadmin.config.security.dto.JwtTokenResponseDto;
 import io.mykim.projectboardadmin.config.security.dto.PrincipalDetail;
 import io.mykim.projectboardadmin.config.security.jwt.JwtProperties;
 import io.mykim.projectboardadmin.config.security.jwt.JwtProvider;
@@ -28,6 +29,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     private final JwtProvider jwtProvider;
     private final JwtRefreshTokenService jwtRefreshTokenService;
     private final CommonResponseUtils commonResponseUtils;
+    private static final String REDIRECT_URL = "/main";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -53,7 +55,12 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         response.addHeader(JwtProperties.HEADER_STRING_REFRESH_TOKEN, JwtProperties.TOKEN_PREFIX +refreshToken);
         response.setStatus(HttpStatus.OK.value());
 
-        commonResponseUtils.sendApiResponse(response, new CommonResponse(CustomSuccessCode.SIGN_IN_SUCCESS));
+        JwtTokenResponseDto tokenResponseDto = JwtTokenResponseDto.builder()
+                                                                    .accessToken(accessToken)
+                                                                    .refreshToken(refreshToken)
+                                                                    .build();
+
+        commonResponseUtils.sendApiResponse(response, new CommonResponse(CustomSuccessCode.SIGN_IN_SUCCESS, tokenResponseDto));
     }
 
     /*

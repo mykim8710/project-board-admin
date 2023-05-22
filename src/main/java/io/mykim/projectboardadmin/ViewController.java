@@ -12,4 +12,11 @@ public class ViewController {
         log.info("[GET] /  >>  root index view");
         return "index";
     }
+
+    @GetMapping("/main")
+    public String homeView() {
+        log.info("[GET] /main  >>  main view");
+        return "main";
+    }
+
 }

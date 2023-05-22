@@ -6,6 +6,8 @@ public class JwtProperties {
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER_STRING_ACCESS_TOKEN = "Authorization_AccessToken";
     public static final String HEADER_STRING_REFRESH_TOKEN = "Authorization_RefreshToken";
+    public static final String COOKIE_NAME_ACCESS_TOKEN = "Cookie_AccessToken";
+    public static final String COOKIE_NAME_REFRESH_TOKEN = "Cookie_RefreshToken";
     public static final String TOKEN_AUDIENCE = "PROJECT_BOARD_ADMIN";
     public static final int ACCESS_TOKEN_VALID_MINUTE = 30;
     public static final int REFRESH_TOKEN_VALID_DAY = 30;

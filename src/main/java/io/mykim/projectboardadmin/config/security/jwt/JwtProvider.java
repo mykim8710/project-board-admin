@@ -4,8 +4,8 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.mykim.projectboardadmin.adminuser.entity.AdminUser;
 import io.mykim.projectboardadmin.adminuser.repository.AdminUserRepository;
-import io.mykim.projectboardadmin.config.security.dto.PrincipalDetail;
 import io.mykim.projectboardadmin.config.security.jwt.enums.TokenType;
+import io.mykim.projectboardadmin.config.security.dto.PrincipalDetail;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,8 +16,11 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
 
@@ -99,9 +102,9 @@ public class JwtProvider {
         return claims.getBody().getSubject();
     }
 
-    // get access token from request header
+    // get token(access, refresh) from request header
     public String getJwtFromHeader(final HttpServletRequest request, TokenType tokenType){
-        String jwtHeader = request.getHeader( tokenType.equals(TokenType.ACCESS) ? JwtProperties.HEADER_STRING_ACCESS_TOKEN : JwtProperties.HEADER_STRING_REFRESH_TOKEN);
+        String jwtHeader = request.getHeader(tokenType.equals(TokenType.ACCESS) ? JwtProperties.HEADER_STRING_ACCESS_TOKEN : JwtProperties.HEADER_STRING_REFRESH_TOKEN);
         if (jwtHeader == null || !jwtHeader.startsWith(JwtProperties.TOKEN_PREFIX)) {
             return null;
         }
@@ -109,15 +112,40 @@ public class JwtProvider {
         return jwtHeader.replace(JwtProperties.TOKEN_PREFIX, "");
     }
 
+    // get token(access, refresh) from cookie
+    public String getJwtFromCookie(final HttpServletRequest request, TokenType tokenType){
+        Cookie[] cookies = request.getCookies();
+        if(cookies == null || cookies.length == 0) {
+            return null;
+        }
 
+        Cookie jwtCookie = Arrays.stream(cookies)
+                                    .filter(cookie -> cookie.getName().equals(tokenType.equals(TokenType.ACCESS) ? JwtProperties.COOKIE_NAME_ACCESS_TOKEN : JwtProperties.COOKIE_NAME_REFRESH_TOKEN))
+                                    .findFirst()
+                                    .orElse(null);
 
+        if(jwtCookie == null) {
+            return null;
+        }
 
+        return jwtCookie.getValue();
+    }
 
+    public void setJwtInCookie(final String token, TokenType tokenType, HttpServletResponse response) {
+        String cookieName = tokenType.equals(TokenType.ACCESS) ? JwtProperties.COOKIE_NAME_ACCESS_TOKEN : JwtProperties.COOKIE_NAME_REFRESH_TOKEN;
+        Cookie cookie = new Cookie(cookieName, token);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(3600*24*30);
+        response.addCookie(cookie);
+    }
 
-
-
-
-
+    public void initJwtCookie(HttpServletRequest request, HttpServletResponse response) {
+        // 쿠키 초기화 : delete cookie
+        Cookie cookie = new Cookie(JwtProperties.COOKIE_NAME_ACCESS_TOKEN, "");
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
 
 
     // SecurityContext 에 Authentication 객체를 저장

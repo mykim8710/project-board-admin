@@ -5,13 +5,11 @@ import io.mykim.projectboardadmin.config.response.CommonResponseUtils;
 import io.mykim.projectboardadmin.config.response.dto.CommonResponse;
 import io.mykim.projectboardadmin.config.response.enums.CustomSuccessCode;
 import io.mykim.projectboardadmin.config.security.dto.PrincipalDetail;
-import io.mykim.projectboardadmin.config.security.jwt.JwtProperties;
 import io.mykim.projectboardadmin.config.security.jwt.JwtProvider;
 import io.mykim.projectboardadmin.config.security.jwt.enums.TokenType;
 import io.mykim.projectboardadmin.config.security.jwt.service.JwtRefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -28,6 +26,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     private final JwtProvider jwtProvider;
     private final JwtRefreshTokenService jwtRefreshTokenService;
     private final CommonResponseUtils commonResponseUtils;
+    private static final String REDIRECT_URL = "/main";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -48,12 +47,11 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         // refresh Token save or update
         jwtRefreshTokenService.insertOrUpdateRefreshToken(userId, refreshToken);
 
-        // set access token in response header
-        response.addHeader(JwtProperties.HEADER_STRING_ACCESS_TOKEN, JwtProperties.TOKEN_PREFIX +accessToken);
-        response.addHeader(JwtProperties.HEADER_STRING_REFRESH_TOKEN, JwtProperties.TOKEN_PREFIX +refreshToken);
-        response.setStatus(HttpStatus.OK.value());
+        // set token in cookie
+        jwtProvider.setJwtInCookie(accessToken, TokenType.ACCESS, response);
+        jwtProvider.setJwtInCookie(refreshToken, TokenType.REFRESH, response);
 
-        commonResponseUtils.sendApiResponse(response, new CommonResponse(CustomSuccessCode.SIGN_IN_SUCCESS));
+        commonResponseUtils.sendApiResponse(response, new CommonResponse(CustomSuccessCode.SIGN_IN_SUCCESS, REDIRECT_URL));
     }
 
     /*

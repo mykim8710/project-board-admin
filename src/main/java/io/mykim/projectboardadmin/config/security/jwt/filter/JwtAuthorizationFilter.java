@@ -6,7 +6,6 @@ package io.mykim.projectboardadmin.config.security.jwt.filter;
 import io.mykim.projectboardadmin.config.security.jwt.JwtProperties;
 import io.mykim.projectboardadmin.config.security.jwt.JwtProvider;
 import io.mykim.projectboardadmin.config.security.jwt.enums.TokenType;
-import io.mykim.projectboardadmin.config.security.jwt.repository.JwtRefreshTokenRepository;
 import io.mykim.projectboardadmin.config.security.jwt.service.JwtRefreshTokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,7 +23,7 @@ import java.util.List;
 @Slf4j
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     // jwt 토큰 검증이 필요없는 url list
-    private static final List<String> EXCLUDED_URLS = List.of("/");
+    private static final List<String> EXCLUDED_URLS = List.of("/", "/sign-out", "/images/**", "/css/**", "/js/**");
     private JwtProvider jwtProvider;
     private JwtRefreshTokenService jwtRefreshTokenService;
 
@@ -44,14 +43,14 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         log.info("JwtAuthorizationFilter 동작 > jwt 유효성체크");
 
         // access token 검증
-        final String accessToken = jwtProvider.getJwtFromHeader(request, TokenType.ACCESS);
+        final String accessToken = jwtProvider.getJwtFromCookie(request, TokenType.ACCESS);
 
         if(StringUtils.hasText(accessToken)) {
             if(jwtProvider.validateToken(accessToken)) {
                 jwtProvider.setAuthentication(accessToken);
             } else {
                 // access token이 유효하지 않다면
-                final String refreshToken = jwtProvider.getJwtFromHeader(request, TokenType.REFRESH);
+                final String refreshToken = jwtProvider.getJwtFromCookie(request, TokenType.REFRESH);
 
                 // refresh token이 존재하고 유효하다면
                 if(StringUtils.hasText(refreshToken) && jwtRefreshTokenService.validateRefreshToken(refreshToken)) {

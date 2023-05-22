@@ -3,10 +3,16 @@ package io.mykim.projectboardadmin.config.security.jwt.filter;
 
 // Authorization :  권한부여, 액세스 제어로 사용자가 읽기, 수정, 삭제를 허용하는지 여부를 확인하는 것, 사용자의 신원이 성공적으로 인증 된 후에 발생
 
+import io.mykim.projectboardadmin.config.security.jwt.JwtProperties;
+import io.mykim.projectboardadmin.config.security.jwt.JwtProvider;
+import io.mykim.projectboardadmin.config.security.jwt.enums.TokenType;
+import io.mykim.projectboardadmin.config.security.jwt.repository.JwtRefreshTokenRepository;
+import io.mykim.projectboardadmin.config.security.jwt.service.JwtRefreshTokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -19,9 +25,13 @@ import java.util.List;
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     // jwt 토큰 검증이 필요없는 url list
     private static final List<String> EXCLUDED_URLS = List.of("/");
+    private JwtProvider jwtProvider;
+    private JwtRefreshTokenService jwtRefreshTokenService;
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, JwtProvider jwtProvider, JwtRefreshTokenService jwtRefreshTokenService) {
         super(authenticationManager);
+        this.jwtProvider = jwtProvider;
+        this.jwtRefreshTokenService = jwtRefreshTokenService;
     }
 
     /**
@@ -31,13 +41,28 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        log.info("JwtAuthorizationFilter 동작");
+        log.info("JwtAuthorizationFilter 동작 > jwt 유효성체크");
 
-        // jwt 토큰검증 : 정상적 사용자인지 확인
+        // access token 검증
+        final String accessToken = jwtProvider.getJwtFromHeader(request, TokenType.ACCESS);
 
+        if(StringUtils.hasText(accessToken)) {
+            if(jwtProvider.validateToken(accessToken)) {
+                jwtProvider.setAuthentication(accessToken);
+            } else {
+                // access token이 유효하지 않다면
+                final String refreshToken = jwtProvider.getJwtFromHeader(request, TokenType.REFRESH);
 
-
-
+                // refresh token이 존재하고 유효하다면
+                if(StringUtils.hasText(refreshToken) && jwtRefreshTokenService.validateRefreshToken(refreshToken)) {
+                    // 새로운 access token 발급 및 Header Setting
+                    Long adminUserId = Long.valueOf(jwtProvider.getSubjectFromClaims(refreshToken));
+                    String newAccessToken = jwtProvider.generateToken(TokenType.ACCESS, adminUserId);
+                    response.setHeader(JwtProperties.HEADER_STRING_ACCESS_TOKEN, newAccessToken);
+                    jwtProvider.setAuthentication(newAccessToken);
+                }
+            }
+        }
 
         chain.doFilter(request, response);
     }

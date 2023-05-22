@@ -26,7 +26,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
      */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        log.info("[POST] /sign-in, JwtAuthenticationFilter 실행");
+        log.info("[POST] /sign-in, JwtAuthenticationFilter 실행 > 인증체크");
 
         SignInRequestDto signInDto;
 

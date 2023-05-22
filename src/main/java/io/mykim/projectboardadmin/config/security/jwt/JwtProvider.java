@@ -1,11 +1,17 @@
 package io.mykim.projectboardadmin.config.security.jwt;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import io.mykim.projectboardadmin.adminuser.entity.AdminUser;
+import io.mykim.projectboardadmin.adminuser.repository.AdminUserRepository;
+import io.mykim.projectboardadmin.config.security.dto.PrincipalDetail;
 import io.mykim.projectboardadmin.config.security.jwt.enums.TokenType;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -20,9 +26,11 @@ import java.util.Date;
  */
 
 @Slf4j
+@RequiredArgsConstructor
 @Component
 public class JwtProvider {
     private SecretKey key;
+    private final AdminUserRepository adminUserRepository;
 
     @PostConstruct
     public void init() {
@@ -30,11 +38,10 @@ public class JwtProvider {
         this.key = Keys.hmacShaKeyFor(decodeKey);
     }
 
-
     // issue jwt token : access or refresh
-    public String issueToken(TokenType tokenType, Long adminUserId) {
+    public String generateToken(TokenType tokenType, Long adminUserId) {
         Claims claims = Jwts.claims().setSubject(String.valueOf(adminUserId));
-        long time = tokenType.equals(TokenType.ACCESS) ? Duration.ofMinutes(30).toMillis() : Duration.ofDays(30).toMillis();
+        long time = tokenType.equals(TokenType.ACCESS) ? Duration.ofMinutes(JwtProperties.ACCESS_TOKEN_VALID_MINUTE).toMillis() : Duration.ofDays(JwtProperties.REFRESH_TOKEN_VALID_DAY).toMillis();
 
         Date tokenIssuedDate = new Date();
         Date tokenExpirationDate = new Date(tokenIssuedDate.getTime() + time);
@@ -58,6 +65,27 @@ public class JwtProvider {
         }
     }
 
+    // check token validation
+    public boolean validateToken(final String token) {
+        try {
+            getClaims(token);
+            log.info("This token is valid.");
+            return true;
+        }catch (SignatureException e) {
+            log.error("Invalid JWT signature: {}", e.getMessage());
+        } catch (MalformedJwtException e) {
+            log.error("Invalid JWT token: {}", e.getMessage());
+        } catch (ExpiredJwtException e) {
+            log.error("JWT token is expired: {}", e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            log.error("JWT token is unsupported: {}", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            log.error("JWT claims string is empty: {}", e.getMessage());
+        }
+
+        return false;
+    }
+
     // get Claims
     public Jws<Claims> getClaims(final String token){
         return Jwts.parserBuilder()
@@ -71,9 +99,9 @@ public class JwtProvider {
         return claims.getBody().getSubject();
     }
 
-    // get jwt from Header
-    public String getJwtFromHeader(final HttpServletRequest request){
-        String jwtHeader = request.getHeader(JwtProperties.HEADER_STRING);
+    // get access token from request header
+    public String getJwtFromHeader(final HttpServletRequest request, TokenType tokenType){
+        String jwtHeader = request.getHeader( tokenType.equals(TokenType.ACCESS) ? JwtProperties.HEADER_STRING_ACCESS_TOKEN : JwtProperties.HEADER_STRING_REFRESH_TOKEN);
         if (jwtHeader == null || !jwtHeader.startsWith(JwtProperties.TOKEN_PREFIX)) {
             return null;
         }
@@ -81,6 +109,27 @@ public class JwtProvider {
         return jwtHeader.replace(JwtProperties.TOKEN_PREFIX, "");
     }
 
+
+
+
+
+
+
+
+
+
+
+
+    // SecurityContext 에 Authentication 객체를 저장
+    public void setAuthentication(String accessToken) {
+        Long adminUserId = Long.valueOf(getSubjectFromClaims(accessToken));
+
+        AdminUser adminUser = adminUserRepository.findById(adminUserId).orElseThrow(() -> new UsernameNotFoundException("없는 사용자입니다."));
+        PrincipalDetail principalDetail = new PrincipalDetail(adminUser);
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(principalDetail, null, principalDetail.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+    }
 
 
 }

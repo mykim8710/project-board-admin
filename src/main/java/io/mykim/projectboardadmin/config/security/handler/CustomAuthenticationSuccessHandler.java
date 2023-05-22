@@ -1,12 +1,13 @@
 package io.mykim.projectboardadmin.config.security.handler;
 
 import io.mykim.projectboardadmin.adminuser.entity.AdminUser;
+import io.mykim.projectboardadmin.config.response.CommonResponseUtils;
+import io.mykim.projectboardadmin.config.response.dto.CommonResponse;
+import io.mykim.projectboardadmin.config.response.enums.CustomSuccessCode;
 import io.mykim.projectboardadmin.config.security.dto.PrincipalDetail;
 import io.mykim.projectboardadmin.config.security.jwt.JwtProperties;
 import io.mykim.projectboardadmin.config.security.jwt.JwtProvider;
-import io.mykim.projectboardadmin.config.security.jwt.entity.JwtRefreshToken;
 import io.mykim.projectboardadmin.config.security.jwt.enums.TokenType;
-import io.mykim.projectboardadmin.config.security.jwt.repository.JwtRefreshTokenRepository;
 import io.mykim.projectboardadmin.config.security.jwt.service.JwtRefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,13 +21,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
     private final JwtProvider jwtProvider;
     private final JwtRefreshTokenService jwtRefreshTokenService;
+    private final CommonResponseUtils commonResponseUtils;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -41,18 +42,18 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
         // jwt logic
         // create token - access, refresh
-        final String accessToken = jwtProvider.issueToken(TokenType.ACCESS, userId);
-        final String refreshToken = jwtProvider.issueToken(TokenType.REFRESH, userId);
+        final String accessToken = jwtProvider.generateToken(TokenType.ACCESS, userId);
+        final String refreshToken = jwtProvider.generateToken(TokenType.REFRESH, userId);
 
         // refresh Token save or update
-        jwtRefreshTokenService.insertOrUpdateRefreshToken(adminUser.getUsername(), refreshToken);
+        jwtRefreshTokenService.insertOrUpdateRefreshToken(userId, refreshToken);
 
         // set access token in response header
-        response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX +accessToken);
+        response.addHeader(JwtProperties.HEADER_STRING_ACCESS_TOKEN, JwtProperties.TOKEN_PREFIX +accessToken);
+        response.addHeader(JwtProperties.HEADER_STRING_REFRESH_TOKEN, JwtProperties.TOKEN_PREFIX +refreshToken);
         response.setStatus(HttpStatus.OK.value());
 
-        // todo : 로그인 성공 redirect 경로 설정해야됨
-        //response.sendRedirect("/");
+        commonResponseUtils.sendApiResponse(response, new CommonResponse(CustomSuccessCode.SIGN_IN_SUCCESS));
     }
 
     /*
@@ -62,7 +63,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
      */
     protected void clearAuthenticationAttributes(HttpServletRequest request) {
         HttpSession httpSession = request.getSession(false);
-
         if (httpSession == null) {
             return;
         }

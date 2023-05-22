@@ -1,12 +1,10 @@
 package io.mykim.projectboardadmin.config.security.handler;
 
+import io.mykim.projectboardadmin.config.response.CommonResponseUtils;
 import io.mykim.projectboardadmin.config.response.dto.CommonResponse;
 import io.mykim.projectboardadmin.config.response.enums.CustomErrorCode;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageNotWritableException;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
@@ -16,29 +14,24 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
+@RequiredArgsConstructor
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
     private static final String PREFIX_REST_API = "/api";
-    private static final String REDIRECT_URL = "/sign-in";
+    private static final String REDIRECT_URL = "/";
+    private final CommonResponseUtils commonResponseUtils;
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+        log.error("Authentication check error");
         String requestURI = request.getRequestURI();
 
         // rest api
         if(requestURI.startsWith(PREFIX_REST_API)) {
-            sendErrorResponseApi(response, CustomErrorCode.UN_AUTHORIZED_USER);
+            commonResponseUtils.sendApiResponse(response, new CommonResponse(CustomErrorCode.UN_AUTHORIZED_USER, REDIRECT_URL));
         } else {
             // view
-            response.sendRedirect(REDIRECT_URL);
-        }
-    }
-
-    private void sendErrorResponseApi(HttpServletResponse response, CustomErrorCode errorCode) throws HttpMessageNotWritableException, IOException {
-        MappingJackson2HttpMessageConverter jsonConverter = new MappingJackson2HttpMessageConverter();
-        MediaType jsonMimeType = MediaType.APPLICATION_JSON;
-        CommonResponse result = new CommonResponse(errorCode, REDIRECT_URL);
-        if(jsonConverter.canWrite(result.getClass(), jsonMimeType)) {
-            jsonConverter.write(result, jsonMimeType, new ServletServerHttpResponse(response));
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 error
+            response.sendRedirect(REDIRECT_URL);             // "/" >> login page url
         }
     }
 }

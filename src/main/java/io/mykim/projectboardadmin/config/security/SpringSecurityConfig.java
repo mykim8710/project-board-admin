@@ -124,8 +124,14 @@ public class SpringSecurityConfig {
         httpSecurity
                 .authorizeRequests()
 
+                .antMatchers(HttpMethod.GET,"/management/**").authenticated()
+
 
                 .antMatchers(HttpMethod.GET,"/main").authenticated()    // 로그인 성공시 이동하는 url
+
+
+
+
                 .antMatchers(HttpMethod.GET,"/error-page/*", "/").permitAll()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll();  // static resource
 

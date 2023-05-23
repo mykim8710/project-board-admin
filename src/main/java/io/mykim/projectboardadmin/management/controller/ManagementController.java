@@ -16,4 +16,22 @@ public class ManagementController {
         log.info("[GET /management/articles  >>  articles management view");
         return "management/articles";
     }
+
+    @GetMapping("/article-comments")
+    public String articleCommentsManagementView() {
+        log.info("[GET /management/article-comments  >>  article comments management view");
+        return "management/article-comments";
+    }
+
+    @GetMapping("/hashtags")
+    public String hashtagsManagementView() {
+        log.info("[GET /management/hashtags  >>  hashtags management view");
+        return "management/hashtags";
+    }
+
+    @GetMapping("/service-users")
+    public String serviceUsersManagementView() {
+        log.info("[GET /management/service-users  >>  service users management view");
+        return "management/service-users";
+    }
 }

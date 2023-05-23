@@ -1,4 +1,4 @@
-package io.mykim.projectboardadmin.config.response.enums;
+package io.mykim.projectboardadmin.global.response.enums;
 
 import lombok.Getter;
 

@@ -1,7 +1,7 @@
-package io.mykim.projectboardadmin.config.response.dto;
+package io.mykim.projectboardadmin.global.response.dto;
 
-import io.mykim.projectboardadmin.config.response.enums.CustomErrorCode;
-import io.mykim.projectboardadmin.config.response.enums.CustomSuccessCode;
+import io.mykim.projectboardadmin.global.response.enums.CustomErrorCode;
+import io.mykim.projectboardadmin.global.response.enums.CustomSuccessCode;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

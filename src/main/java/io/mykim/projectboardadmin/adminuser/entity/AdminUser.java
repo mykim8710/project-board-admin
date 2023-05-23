@@ -1,6 +1,6 @@
 package io.mykim.projectboardadmin.adminuser.entity;
 
-import io.mykim.projectboardadmin.config.jpa.AuditingField;
+import io.mykim.projectboardadmin.global.jpa.AuditingField;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

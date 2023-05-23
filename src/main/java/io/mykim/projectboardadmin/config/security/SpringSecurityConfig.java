@@ -1,6 +1,6 @@
 package io.mykim.projectboardadmin.config.security;
 
-import io.mykim.projectboardadmin.config.response.CommonResponseUtils;
+import io.mykim.projectboardadmin.global.response.CommonResponseUtils;
 import io.mykim.projectboardadmin.config.security.handler.CustomAccessDeniedHandler;
 import io.mykim.projectboardadmin.config.security.handler.CustomAuthenticationEntryPoint;
 import io.mykim.projectboardadmin.config.security.handler.CustomAuthenticationFailureHandler;

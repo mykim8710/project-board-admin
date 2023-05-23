@@ -1,6 +1,6 @@
-package io.mykim.projectboardadmin.config.response;
+package io.mykim.projectboardadmin.global.response;
 
-import io.mykim.projectboardadmin.config.response.dto.CommonResponse;
+import io.mykim.projectboardadmin.global.response.dto.CommonResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotWritableException;

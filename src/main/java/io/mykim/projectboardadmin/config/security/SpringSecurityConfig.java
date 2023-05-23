@@ -1,6 +1,6 @@
 package io.mykim.projectboardadmin.config.security;
 
-import io.mykim.projectboardadmin.config.response.CommonResponseUtils;
+import io.mykim.projectboardadmin.global.response.CommonResponseUtils;
 import io.mykim.projectboardadmin.config.security.handler.CustomAccessDeniedHandler;
 import io.mykim.projectboardadmin.config.security.handler.CustomAuthenticationEntryPoint;
 import io.mykim.projectboardadmin.config.security.handler.CustomAuthenticationFailureHandler;
@@ -124,8 +124,11 @@ public class SpringSecurityConfig {
         httpSecurity
                 .authorizeRequests()
 
+                .antMatchers(HttpMethod.GET,"/management/**").authenticated()
 
-                .antMatchers(HttpMethod.GET,"/main").authenticated()    // 로그인 성공시 이동하는 url
+
+
+
                 .antMatchers(HttpMethod.GET,"/error-page/*", "/").permitAll()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll();  // static resource
 

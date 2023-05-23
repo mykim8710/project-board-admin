@@ -1,9 +1,9 @@
 package io.mykim.projectboardadmin.config.security.handler;
 
 import io.mykim.projectboardadmin.adminuser.entity.AdminUser;
-import io.mykim.projectboardadmin.config.response.CommonResponseUtils;
-import io.mykim.projectboardadmin.config.response.dto.CommonResponse;
-import io.mykim.projectboardadmin.config.response.enums.CustomSuccessCode;
+import io.mykim.projectboardadmin.global.response.CommonResponseUtils;
+import io.mykim.projectboardadmin.global.response.dto.CommonResponse;
+import io.mykim.projectboardadmin.global.response.enums.CustomSuccessCode;
 import io.mykim.projectboardadmin.config.security.dto.PrincipalDetail;
 import io.mykim.projectboardadmin.config.security.jwt.JwtProvider;
 import io.mykim.projectboardadmin.config.security.jwt.enums.TokenType;
@@ -26,7 +26,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     private final JwtProvider jwtProvider;
     private final JwtRefreshTokenService jwtRefreshTokenService;
     private final CommonResponseUtils commonResponseUtils;
-    private static final String REDIRECT_URL = "/main";
+    private static final String REDIRECT_URL = "/management/articles";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {

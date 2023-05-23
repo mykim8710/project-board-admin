@@ -1,8 +1,8 @@
 package io.mykim.projectboardadmin.config.security.handler;
 
-import io.mykim.projectboardadmin.config.response.CommonResponseUtils;
-import io.mykim.projectboardadmin.config.response.dto.CommonResponse;
-import io.mykim.projectboardadmin.config.response.enums.CustomErrorCode;
+import io.mykim.projectboardadmin.global.response.CommonResponseUtils;
+import io.mykim.projectboardadmin.global.response.dto.CommonResponse;
+import io.mykim.projectboardadmin.global.response.enums.CustomErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;

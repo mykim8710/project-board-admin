@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html th:fragment="layout(title, content, links, scripts)"
+      lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="layout/layout-head :: layoutHead"/>
+<head>
+    <title th:replace="${title}">페이지 타이틀</title>
+    <th:block th:replace="${links}"/>
+    <th:block th:replace="${scripts}"/>
+</head>
+
+<body>
+    <nav th:replace="layout/layout-header :: layoutHeader"/>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav th:replace="layout/layout-sidebar :: layoutSidebar"></nav>
+            <main th:replace="${content}"></main>
+        </div>
+    </div>
+</body>
+</html>

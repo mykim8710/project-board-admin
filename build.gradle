@@ -49,6 +49,9 @@ dependencies {
     // rest template
     implementation 'org.apache.httpcomponents:httpclient:4.5'
 
+    // StringUtils
+    implementation 'org.apache.commons:commons-lang3:3.0'
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'

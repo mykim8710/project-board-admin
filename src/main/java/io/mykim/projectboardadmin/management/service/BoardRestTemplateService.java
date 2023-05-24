@@ -70,6 +70,49 @@ public class BoardRestTemplateService {
         return restTemplate.exchange(uri, HttpMethod.DELETE, httpEntity, CommonResponse.class);
     }
 
+    public ResponseEntity<CommonResponse> getFindAllArticleComments(HttpServletRequest request, RequestSearchConditionDto searchConditionDto) {
+        final HttpEntity<HttpHeaders> httpEntity = new HttpEntity<>(getRequestHeader());
+        String api = "/api/admin/article-comments";
+        URI uri = UriComponentsBuilder
+                            .fromUriString(setApiForm(request, api))
+                            .queryParam("searchKeyword", searchConditionDto.getSearchKeyword())
+                            .queryParam("page", searchConditionDto.getPage())
+                            .queryParam("size", searchConditionDto.getSize())
+                            .queryParam("sort", searchConditionDto.getSort())
+                            .encode()
+                            .build()
+                            .toUri();
+
+        return restTemplate.exchange(uri, HttpMethod.GET, httpEntity, CommonResponse.class);
+    }
+
+    public ResponseEntity<CommonResponse> getFindOneArticleCommentById(HttpServletRequest request, Long articleId) {
+        final HttpEntity<HttpHeaders> httpEntity = new HttpEntity<>(getRequestHeader());
+        String api = "/api/admin/article-comments/{articleId}";
+
+        URI uri = UriComponentsBuilder
+                                .fromUriString(setApiForm(request, api))
+                                .encode()
+                                .build()
+                                .expand(articleId)
+                                .toUri();
+
+        return restTemplate.exchange(uri, HttpMethod.GET, httpEntity, CommonResponse.class);
+    }
+
+    public ResponseEntity<CommonResponse> removeArticleCommentById(HttpServletRequest request, Long articleId) {
+        final HttpEntity<HttpHeaders> httpEntity = new HttpEntity<>(getRequestHeader());
+        String api = "/api/admin/article-comments/{articleId}";
+
+        URI uri = UriComponentsBuilder
+                                .fromUriString(setApiForm(request, api))
+                                .encode()
+                                .build()
+                                .expand(articleId)
+                                .toUri();
+
+        return restTemplate.exchange(uri, HttpMethod.DELETE, httpEntity, CommonResponse.class);
+    }
 
     private String setApiForm(HttpServletRequest request, String api) {
         int localPort = 8080;

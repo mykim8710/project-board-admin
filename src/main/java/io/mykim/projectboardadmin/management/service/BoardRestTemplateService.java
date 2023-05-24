@@ -170,6 +170,22 @@ public class BoardRestTemplateService {
         }
     }
 
+    public ResponseEntity<CommonResponse> getFindAllServiceUsers(HttpServletRequest request, RequestSearchConditionDto searchConditionDto) {
+        final HttpEntity<HttpHeaders> httpEntity = new HttpEntity<>(getRequestHeader());
+        String api = "/api/admin/users";
+        URI uri = UriComponentsBuilder
+                            .fromUriString(setApiForm(request, api))
+                            .queryParam("searchKeyword", searchConditionDto.getSearchKeyword())
+                            .queryParam("page", searchConditionDto.getPage())
+                            .queryParam("size", searchConditionDto.getSize())
+                            .queryParam("sort", searchConditionDto.getSort())
+                            .encode()
+                            .build()
+                            .toUri();
+
+        return restTemplate.exchange(uri, HttpMethod.GET, httpEntity, CommonResponse.class);
+    }
+
     private ResponseEntity returnErrorResponse(String errorMessage) throws JsonProcessingException {
         String message = StringUtils.removeStart(errorMessage.split(" : ")[1], "\"");
         message = StringUtils.removeEnd(message, "\"");

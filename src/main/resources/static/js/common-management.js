@@ -10,7 +10,7 @@ window.onload = function () {
 
             break;
         case "serviceUsers" :
-
+            findAllServiceUsers();
             break;
     }
 
@@ -26,7 +26,7 @@ window.onload = function () {
 
                 break;
             case "serviceUsers" :
-
+                findAllServiceUsers();
                 break;
         }
     });
@@ -43,7 +43,7 @@ window.onload = function () {
 
                 break;
             case "serviceUsers" :
-
+                findAllServiceUsers();
                 break;
         }
     });
@@ -64,7 +64,7 @@ function sort(selectedSortCondition) {
 
             break;
         case "serviceUsers" :
-
+            findAllServiceUsers();
             break;
     }
 }
@@ -117,13 +117,13 @@ function movePage(pageNumber) {
             findAllArticles();
             break;
         case "articleComments" :
-
+            findAllArticleComments();
             break;
         case "hashtags" :
 
             break;
         case "serviceUsers" :
-
+            findAllServiceUsers();
             break;
     }
 }

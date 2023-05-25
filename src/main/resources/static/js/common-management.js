@@ -4,7 +4,7 @@ window.onload = function () {
             findAllArticles();
             break;
         case "articleComments" :
-
+            findAllArticleComments();
             break;
         case "hashtags" :
 
@@ -20,7 +20,7 @@ window.onload = function () {
                 findAllArticles();
                 break;
             case "articleComments" :
-
+                findAllArticleComments();
                 break;
             case "hashtags" :
 
@@ -37,7 +37,7 @@ window.onload = function () {
                 findAllArticles();
                 break;
             case "articleComments" :
-
+                findAllArticleComments();
                 break;
             case "hashtags" :
 
@@ -58,7 +58,7 @@ function sort(selectedSortCondition) {
             findAllArticles();
             break;
         case "articleComments" :
-
+            findAllArticleComments();
             break;
         case "hashtags" :
 

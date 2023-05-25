@@ -1,4 +1,7 @@
 window.onload = function () {
+    $('#sidebarMenu .nav-link').removeClass('active');
+    $(`#sidebarMenu #service-management-${pageName}`).addClass('active');
+
     switch (pageName) {
         case "articles" :
             findAllArticles();

@@ -1,25 +1,25 @@
 <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse" th:fragment="layoutSidebar">
     <div class="position-sticky pt-3">
-        <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        <h4 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
             <span>Admin Management</span>
             <a class="link-secondary" href="#" aria-label="Add a new report">
                 <span data-feather="plus-circle"></span>
             </a>
-        </h5>
+        </h4>
         <ul class="nav flex-column mb-2">
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a id="admin-management-dashboard" class="nav-link" href="#">
                     <span data-feather="file-text"></span>
                     Dashboard
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a id="admin-management-users" class="nav-link" href="#">
                     <span data-feather="file-text"></span>
-                    BackOffice 관리자
+                    admin 관리
                 </a>
             </li>
-            <li class="nav-item">
+            <!--<li class="nav-item">
                 <a class="nav-link" href="#">
                     <span data-feather="file-text"></span>
                     Todo List
@@ -30,36 +30,36 @@
                     <span data-feather="file-text"></span>
                     Chat
                 </a>
-            </li>
+            </li>-->
         </ul>
 
-        <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        <h4 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
             <span>Service Management</span>
             <a class="link-secondary" href="#" aria-label="Add a new report">
                 <span data-feather="plus-circle"></span>
             </a>
-        </h5>
+        </h4>
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/management/articles">
+                <a id="service-management-articles" class="nav-link" href="/management/articles">
                     <span data-feather="home"></span>
                     게시글 관리
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/management/article-comments">
+                <a id="service-management-articleComments" class="nav-link" href="/management/article-comments">
                     <span data-feather="file"></span>
                     댓글 관리
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/management/hashtags">
+                <a id="service-management-hashtags" class="nav-link" href="/management/hashtags">
                     <span data-feather="shopping-cart"></span>
                     해시태그 관리
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/management/service-users">
+                <a id="service-management-serviceUsers" class="nav-link" href="/management/service-users">
                     <span data-feather="users"></span>
                     회원관리
                 </a>

@@ -7,7 +7,7 @@ window.onload = function () {
             findAllArticleComments();
             break;
         case "hashtags" :
-
+            findAllHashtags();
             break;
         case "serviceUsers" :
             findAllServiceUsers();
@@ -23,7 +23,7 @@ window.onload = function () {
                 findAllArticleComments();
                 break;
             case "hashtags" :
-
+                findAllHashtags();
                 break;
             case "serviceUsers" :
                 findAllServiceUsers();
@@ -32,6 +32,7 @@ window.onload = function () {
     });
 
     document.getElementById(`searchInput`).addEventListener('input', e => {
+        currentPage = 0;
         switch (pageName) {
             case "articles" :
                 findAllArticles();
@@ -40,7 +41,7 @@ window.onload = function () {
                 findAllArticleComments();
                 break;
             case "hashtags" :
-
+                findAllHashtags();
                 break;
             case "serviceUsers" :
                 findAllServiceUsers();
@@ -61,7 +62,7 @@ function sort(selectedSortCondition) {
             findAllArticleComments();
             break;
         case "hashtags" :
-
+            findAllHashtags();
             break;
         case "serviceUsers" :
             findAllServiceUsers();
@@ -120,7 +121,7 @@ function movePage(pageNumber) {
             findAllArticleComments();
             break;
         case "hashtags" :
-
+            findAllHashtags();
             break;
         case "serviceUsers" :
             findAllServiceUsers();

@@ -80,3 +80,23 @@ async function callRemoveArticleCommentApi(articleCommentId) {
     });
     return await res.json();
 }
+
+
+
+
+async function callFindAllServiceUsersApi() {
+    let searchKeyword = document.getElementById('searchInput').value;
+    let page = currentPage;
+    let size = document.getElementById('serviceUsers-size').value;
+    let sort = sortCondition.concat(",").concat(sortDirection);
+
+    const res = await fetch(`/api/v1/management/service-users?searchKeyword=${searchKeyword}&page=${page}&size=${size}&sort=${sort}`, {
+        method: 'GET',
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+        },
+    }).catch(error => {
+        console.log(error);
+    });
+    return await res.json();
+}

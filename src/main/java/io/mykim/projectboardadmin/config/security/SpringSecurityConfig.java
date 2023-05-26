@@ -124,6 +124,7 @@ public class SpringSecurityConfig {
         httpSecurity
                 .authorizeRequests()
 
+                //.antMatchers("/api/v1/**").authenticated()
                 .antMatchers(HttpMethod.GET,"/management/**").authenticated()
 
 

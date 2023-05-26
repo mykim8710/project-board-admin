@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/layout-main :: layout(~{::title},~{::main},~{::link},~{::script})}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>DashBoard</title>
+    <link>
+    <script>
+        const pageName = "dashboard";
+    </script>
+</head>
+<body>
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4" id="articles-main">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <div>ADMIN MANAGEMENT > <a href="">Dashboard</a></div>
+    </div>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Dashboard</h1>
+    </div>
+
+    <div class="table-responsive">
+    </div>
+</main>
+</body>
+</html>

@@ -1,6 +1,6 @@
 window.onload = function () {
     $('#sidebarMenu .nav-link').removeClass('active');
-    $(`#sidebarMenu #service-management-${pageName}`).addClass('active');
+    $(`#sidebarMenu #page-${pageName}`).addClass('active');
 
     switch (pageName) {
         case "articles" :
@@ -14,6 +14,11 @@ window.onload = function () {
             break;
         case "serviceUsers" :
             findAllServiceUsers();
+            break;
+        case "adminUsers":
+            findAllAdminUsers();
+            break;
+        default:
             break;
     }
 
@@ -30,6 +35,9 @@ window.onload = function () {
                 break;
             case "serviceUsers" :
                 findAllServiceUsers();
+                break;
+            case "adminUsers":
+                findAllAdminUsers();
                 break;
         }
     });
@@ -48,6 +56,9 @@ window.onload = function () {
                 break;
             case "serviceUsers" :
                 findAllServiceUsers();
+                break;
+            case "adminUsers":
+                findAllAdminUsers();
                 break;
         }
     });
@@ -69,6 +80,9 @@ function sort(selectedSortCondition) {
             break;
         case "serviceUsers" :
             findAllServiceUsers();
+            break;
+        case "adminUsers":
+            findAllAdminUsers();
             break;
     }
 }
@@ -128,6 +142,9 @@ function movePage(pageNumber) {
             break;
         case "serviceUsers" :
             findAllServiceUsers();
+            break;
+        case "adminUsers":
+            findAllAdminUsers();
             break;
     }
 }

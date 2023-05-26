@@ -1,5 +1,6 @@
 package io.mykim.projectboardadmin.adminuser.entity;
 
+import io.mykim.projectboardadmin.adminuser.dto.RequestAdminUserCreateDto;
 import io.mykim.projectboardadmin.global.jpa.AuditingField;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -46,6 +47,16 @@ public class AdminUser extends AuditingField {
                             .email(email)
                             .adminUserRole(adminUserRole)
                             .build();
+    }
+
+    public static AdminUser of(RequestAdminUserCreateDto createDto) {
+        return AdminUser.builder()
+                .username(createDto.getUsername())
+                .password(createDto.getPassword())
+                .nickname(createDto.getNickname())
+                .email(createDto.getEmail())
+                .adminUserRole(createDto.getAdminUserRole())
+                .build();
     }
 
     public void updateEmail(String email) {

@@ -5,6 +5,10 @@ import lombok.Getter;
 @Getter
 public enum CustomSuccessCode {
     SIGN_IN_SUCCESS(200, "", "sign in success"),
+    COMMON_SUCCESS(200, "", "SUCCESS"),
+    INSERT_SUCCESS(200, "", "INSERT SUCCESS"),
+    UPDATE_SUCCESS(200, "", "UPDATE SUCCESS"),
+    DELETE_SUCCESS(200, "", "DELETE SUCCESS"),
 
     ;
 

@@ -1,3 +1,44 @@
+async function callFindAllAdminUsersApi() {
+    let searchKeyword = document.getElementById('searchInput').value;
+    let page = currentPage;
+    let size = document.getElementById('adminUsers-size').value;
+    let sort = sortCondition.concat(",").concat(sortDirection);
+
+    const res = await fetch(`/api/v1/admin-users?searchKeyword=${searchKeyword}&page=${page}&size=${size}&sort=${sort}`, {
+        method: 'GET',
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+        },
+    }).catch(error => {
+        console.log(error);
+    });
+    return await res.json();
+}
+
+async function callDuplicateCheckAdminUserInfoApi(type, keyword) {
+    const res = await fetch(`/api/v1/admin-users/duplicate-check?type=${type}&keyword=${keyword}`, {
+        method: 'GET',
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+        }
+    }).catch(error => {
+        console.log(error);
+    });
+    return await res.json();
+}
+
+async function callCreateAdminUserApi(adminUserCreateDto) {
+    const res = await fetch(`/api/v1/admin-users`, {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+        },
+        body: JSON.stringify(adminUserCreateDto)
+    }).catch(error => {
+        console.log(error);
+    });
+    return await res.json();
+}
 
 async function callFindAllArticlesApi() {
     let searchKeyword = document.getElementById('searchInput').value;

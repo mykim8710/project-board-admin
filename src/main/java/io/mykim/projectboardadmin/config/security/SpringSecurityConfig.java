@@ -124,10 +124,15 @@ public class SpringSecurityConfig {
         httpSecurity
                 .authorizeRequests()
 
-                //.antMatchers("/api/v1/**").authenticated()
+
+                // Admin Management > 관리자 계정 관리
+                .antMatchers(HttpMethod.POST, "/api/v1/admin-users").hasRole("MASTER")
+                .antMatchers(HttpMethod.GET, "/api/v1/admin-users/duplicate-check").hasRole("MASTER")
+                .antMatchers(HttpMethod.GET, "/api/v1/admin-users").authenticated()
+
+
+                .antMatchers(HttpMethod.GET,"/admin/**").authenticated()
                 .antMatchers(HttpMethod.GET,"/management/**").authenticated()
-
-
 
 
                 .antMatchers(HttpMethod.GET,"/error-page/*", "/").permitAll()

@@ -16,6 +16,9 @@ public enum CustomErrorCode {
 
     DUPLICATE_ADMIN_USER_USERNAME(400, "D001", "duplicate this username"),
     DUPLICATE_ADMIN_USER_NICKNAME(400, "D002", "duplicate this nickname"),
+
+
+    NOT_FOUND_TODO(400, "NF001", "not found this todo"),
     ;
 
     private int status;

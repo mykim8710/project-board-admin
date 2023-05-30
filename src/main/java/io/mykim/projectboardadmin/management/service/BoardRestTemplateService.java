@@ -16,6 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -28,6 +29,18 @@ public class BoardRestTemplateService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(new MediaType("application", "json", StandardCharsets.UTF_8));
         return headers;
+    }
+
+    public Map<String, Long> getTotalCount(HttpServletRequest request) {
+        final HttpEntity<HttpHeaders> httpEntity = new HttpEntity<>(getRequestHeader());
+        String api = "/api/admin/dashboard/total-count";
+        URI uri = UriComponentsBuilder
+                .fromUriString(setApiForm(request, api))
+                .encode()
+                .build()
+                .toUri();
+
+        return restTemplate.exchange(uri, HttpMethod.GET, httpEntity, Map.class).getBody();
     }
 
     public ResponseEntity<CommonResponse> getFindAllArticles(HttpServletRequest request, RequestSearchConditionDto searchConditionDto) {

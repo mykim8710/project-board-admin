@@ -46,7 +46,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         final String accessToken = jwtProvider.getJwtFromCookie(request, TokenType.ACCESS);
 
         if(StringUtils.hasText(accessToken)) {
-            if(jwtProvider.validateToken(accessToken)) {
+            if(jwtProvider.validateToken(accessToken, TokenType.ACCESS)) {
                 jwtProvider.setAuthentication(accessToken);
             } else {
                 // access token이 유효하지 않다면

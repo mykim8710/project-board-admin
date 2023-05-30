@@ -24,7 +24,7 @@
                 <div class="card text-white bg-success mb-3 text-center" style="min-width: 15rem;">
                     <div class="card-header">전체 게시글 수</div>
                     <div class="card-body">
-                        <h4 class="card-title"><a href="/management/articles" style="text-decoration: none; color: white;">100</a></h4>
+                        <h4 class="card-title"><a href="/management/articles" style="text-decoration: none; color: white;" th:text="${articlesTotalCount}">0</a></h4>
                     </div>
                 </div>
             </div>
@@ -33,7 +33,7 @@
                 <div class="card text-white bg-danger mb-3 text-center" style="min-width: 15rem;">
                     <div class="card-header">전체 댓글 수</div>
                     <div class="card-body">
-                        <h4 class="card-title"><a href="/management/article-comments" style="text-decoration: none; color: white;">100</a></h4>
+                        <h4 class="card-title"><a href="/management/article-comments" style="text-decoration: none; color: white;" th:text="${articleCommentTotalCount}">0</a></h4>
                     </div>
                 </div>
             </div>
@@ -42,7 +42,7 @@
                 <div class="card text-white bg-warning mb-3 text-center" style="min-width: 15rem;">
                     <div class="card-header">전체 해시태그 수</div>
                     <div class="card-body">
-                        <h4 class="card-title"><a href="/management/hashtags" style="text-decoration: none; color: white;">100</a></h4>
+                        <h4 class="card-title"><a href="/management/hashtags" style="text-decoration: none; color: white;" th:text="${hashtagTotalCount}">0</a></h4>
                     </div>
                 </div>
             </div>
@@ -51,7 +51,7 @@
                 <div class="card text-white bg-info mb-3 text-center" style="min-width: 15rem;">
                     <div class="card-header">전체 회원 수</div>
                     <div class="card-body">
-                        <h4 class="card-title"><a href="/management/service-users" style="text-decoration: none; color: white;">100</a></h4>
+                        <h4 class="card-title"><a href="/management/service-users" style="text-decoration: none; color: white;" th:text="${userTotalCount}">0</a></h4>
                     </div>
                 </div>
             </div>

@@ -124,6 +124,25 @@ public class SpringSecurityConfig {
         httpSecurity
                 .authorizeRequests()
 
+                // [api]
+                // Service Management > Articles
+                .antMatchers(HttpMethod.DELETE, "/api/v1/management/articles/**").hasRole("MASTER")
+                .antMatchers(HttpMethod.GET, "/api/v1/management/articles/**").authenticated()
+                .antMatchers(HttpMethod.GET, "/api/v1/management/articles").authenticated()
+
+                // Service Management > ArticleComments
+                .antMatchers(HttpMethod.DELETE, "/api/v1/management/article-comments/**").hasRole("MASTER")
+                .antMatchers(HttpMethod.GET, "/api/v1/management/article-comments/**").authenticated()
+                .antMatchers(HttpMethod.GET, "/api/v1/management/article-comments").authenticated()
+
+                // Service Management > Hashtags
+                .antMatchers(HttpMethod.DELETE, "/api/v1/management/hashtags/**").hasRole("MASTER")
+                .antMatchers(HttpMethod.POST, "/api/v1/management/hashtags").hasRole("MASTER")
+                .antMatchers(HttpMethod.GET, "/api/v1/management/hashtags").authenticated()
+
+                // Service Management > ServiceUsers
+                .antMatchers(HttpMethod.GET, "/api/v1/management/service-users").authenticated()
+
                 // Admin Management > TodoList
                 .antMatchers("/api/v1/todos/**").authenticated()
 
@@ -133,10 +152,9 @@ public class SpringSecurityConfig {
                 .antMatchers(HttpMethod.GET, "/api/v1/admin-users").authenticated()
 
 
+                // [View]
                 .antMatchers(HttpMethod.GET,"/admin/**").authenticated()
                 .antMatchers(HttpMethod.GET,"/management/**").authenticated()
-
-
                 .antMatchers(HttpMethod.GET,"/error-page/*", "/").permitAll()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll();  // static resource
 

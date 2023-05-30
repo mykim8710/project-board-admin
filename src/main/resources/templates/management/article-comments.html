@@ -5,11 +5,12 @@
 <head>
     <title>댓글 관리 페이지</title>
     <link>
-    <script>
+    <script th:inline="javascript">
         const pageName = "articleComments";
         let currentPage = 0;
         let sortCondition = "id";
         let sortDirection = "DESC";
+        const auth = [[${#authentication.principal.adminUser.adminUserRole}]];
 
         function findAllArticleComments() {
             callFindAllArticleCommentsApi().then(response => {
@@ -58,9 +59,13 @@
                                     <p>${articleCommentOne.articleCommentContent}</p>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" id="modalCloseBtn">Close</button>
-                                    <button type="button" class="btn btn-danger" onclick="removeArticleCommentOne(${articleCommentOne.articleCommentId})">Delete</button>
-                                </div>
+                                    <button type="button" class="btn btn-secondary" id="modalCloseBtn">Close</button>`;
+
+                        if(auth === "ROLE_MASTER") {
+                            html += `<button type="button" class="btn btn-danger" onclick="removeArticleCommentOne(${articleCommentOne.articleCommentId})">Delete</button>`;
+                        }
+
+                        html += `</div>
                             </div>
                         </div>`;
             modalArea.innerHTML = html;

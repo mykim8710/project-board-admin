@@ -2,6 +2,7 @@ package io.mykim.projectboardadmin.config.security.jwt.service;
 
 import io.mykim.projectboardadmin.config.security.jwt.JwtProvider;
 import io.mykim.projectboardadmin.config.security.jwt.entity.JwtRefreshToken;
+import io.mykim.projectboardadmin.config.security.jwt.enums.TokenType;
 import io.mykim.projectboardadmin.config.security.jwt.repository.JwtRefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +35,7 @@ public class JwtRefreshTokenService {
 
     @Transactional(readOnly = true)
     public boolean validateRefreshToken(String refreshToken) {
-        if(!jwtProvider.validateToken(refreshToken)) {
+        if(!jwtProvider.validateToken(refreshToken, TokenType.REFRESH)) {
             return false;
         }
 

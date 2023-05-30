@@ -26,7 +26,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
     private final JwtProvider jwtProvider;
     private final JwtRefreshTokenService jwtRefreshTokenService;
     private final CommonResponseUtils commonResponseUtils;
-    private static final String REDIRECT_URL = "/management/articles";
+    private static final String REDIRECT_URL = "/admin/dashboard";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {

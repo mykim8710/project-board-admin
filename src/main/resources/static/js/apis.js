@@ -180,3 +180,41 @@ async function callFindAllServiceUsersApi() {
     });
     return await res.json();
 }
+
+async function callFindMyTodoListApi() {
+    let page = currentPage;
+    const res = await fetch(`/api/v1/todos?page=${page}`, {
+        method: 'GET',
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+        },
+    }).catch(error => {
+        console.log(error);
+    });
+    return await res.json();
+}
+
+async function callCreateNewTodoApi(createDto) {
+    const res = await fetch(`/api/v1/todos`, {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+        },
+        body: JSON.stringify(createDto)
+    }).catch(error => {
+        console.log(error);
+    });
+    return await res.json();
+}
+
+async function callUpdateTodoStatusApi(todoId, todoStatus) {
+    const res = await fetch(`/api/v1/todos/${todoId}?todoStatus=${todoStatus}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+        }
+    }).catch(error => {
+        console.log(error);
+    });
+    return await res.json();
+}

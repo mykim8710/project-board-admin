@@ -18,29 +18,11 @@ window.onload = function () {
         case "adminUsers":
             findAllAdminUsers();
             break;
+        case "dashboard":
+            findMyTodoList();
         default:
             break;
     }
-
-    document.getElementById(`${pageName}-size`).addEventListener('change', e => {
-        switch (pageName) {
-            case "articles" :
-                findAllArticles();
-                break;
-            case "articleComments" :
-                findAllArticleComments();
-                break;
-            case "hashtags" :
-                findAllHashtags();
-                break;
-            case "serviceUsers" :
-                findAllServiceUsers();
-                break;
-            case "adminUsers":
-                findAllAdminUsers();
-                break;
-        }
-    });
 
     document.getElementById(`searchInput`).addEventListener('input', e => {
         currentPage = 0;
@@ -62,6 +44,26 @@ window.onload = function () {
                 break;
         }
     });
+}
+
+function setPageSize() {
+    switch (pageName) {
+        case "articles" :
+            findAllArticles();
+            break;
+        case "articleComments" :
+            findAllArticleComments();
+            break;
+        case "hashtags" :
+            findAllHashtags();
+            break;
+        case "serviceUsers" :
+            findAllServiceUsers();
+            break;
+        case "adminUsers":
+            findAllAdminUsers();
+            break;
+    }
 }
 
 function sort(selectedSortCondition) {
@@ -145,6 +147,9 @@ function movePage(pageNumber) {
             break;
         case "adminUsers":
             findAllAdminUsers();
+            break;
+        case "dashboard":
+            findMyTodoList();
             break;
     }
 }

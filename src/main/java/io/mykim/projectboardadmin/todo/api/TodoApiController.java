@@ -23,7 +23,7 @@ public class TodoApiController {
 
     @GetMapping("/api/v1/todos")
     public ResponseEntity<CommonResponse> findMyTodoList(@AuthenticationPrincipal PrincipalDetail principalDetail,
-                                                         @PageableDefault(page = 0, size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+                                                         @PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         log.info("[GET] /api/v1/todos?page={} => find all hashtags", pageable.getOffset());
         CommonResponse response = new CommonResponse(CustomSuccessCode.COMMON_SUCCESS, todoService.findAllMyTodoList(principalDetail.getAdminUser(), pageable));
         return ResponseEntity

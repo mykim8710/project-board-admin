@@ -7,6 +7,109 @@
     <link>
     <script>
         const pageName = "dashboard";
+        let currentPage = 0;
+
+        function findMyTodoList() {
+            callFindMyTodoListApi().then(response => {
+                drawTodoListDom(response.data.todoFindDtos);
+                pagination(response.data.customPaginationResponse);
+            });
+        }
+
+        function drawTodoListDom(todos) {
+            let todoListArea = document.getElementById('todoList-tbody');
+            todoListArea.innerText = "";
+
+            if (todos.length == 0) {
+                const newTr = document.createElement('tr');
+                let html = `<td colspan="5">TodoList 가 없습니다.</td>`;
+                newTr.innerHTML = html;
+
+                todoListArea.appendChild(newTr);
+            } else {
+                todos.forEach(todo => {
+                    const newTr = document.createElement('tr');
+                    let html = `<td>${todo.id}</td>
+                                <td>${todo.todoName}</td>
+                                <td>${todo.createdAt}</td>
+                                <td>${todo.todoStatus}</td>
+                                <td>`;
+
+                        html += setTodoMenuDom(todo.id, todo.todoStatus);
+                        html += `</td>`;
+                    newTr.innerHTML = html;
+
+                    todoListArea.appendChild(newTr);
+                });
+            }
+        }
+
+        function todoCreateModalOn() {
+            const modalArea = document.getElementById("todoCreateModal");
+            modalArea.innerText='';
+            let html = `<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5">Todo 추가</h1>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="text" placeholder="todo" id="todoName" style="width: 100%;">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" id="modalCloseBtn">Close</button>
+                                    <button type="button" class="btn btn-primary" onclick="createNewTodo()">Add</button>
+                                </div>
+                            </div>
+                        </div>`;
+            modalArea.innerHTML = html;
+            $('#todoCreateModal').show();
+
+            $('#modalCloseBtn').on('click',function() {
+                $('#todoCreateModal').hide();
+            })
+        }
+
+        function createNewTodo() {
+            let todoName = $("#todoName").val().trim();
+            if(todoName === "" || todoName.length === 0) {
+                alert("Todo 를 입력하세요");
+                return;
+            }
+
+            let createDto = {
+                "todoName" : todoName
+            }
+
+            callCreateNewTodoApi(createDto).then(response => {
+                if(response.status === 200) {
+                    $('#todoCreateModal').hide();
+                    findMyTodoList();
+                }
+            });
+        }
+
+        function setTodoMenuDom(todoId, todoStatus) {
+            let dom;
+
+            if(todoStatus === "NOT") {
+                dom = `<button class="btn btn-primary btn-sm" type="button" onclick="updateTodoStatus(${todoId},'ING')">진행하기</button>`;
+            } else if(todoStatus === "ING") {
+                dom = `<button class="btn btn-warning btn-sm" type="button" onclick="updateTodoStatus(${todoId},'COMPLETE')">끝내기</button>`;
+            } else {
+                dom = ``;
+            }
+
+            return dom;
+        }
+
+        function updateTodoStatus(todoId, todoStatus) {
+            callUpdateTodoStatusApi(todoId, todoStatus).then(response => {
+                if(response.status === 200) {
+                    currentPage = 0;
+                    findMyTodoList();
+                }
+            });
+        }
     </script>
 </head>
 <body>
@@ -63,17 +166,21 @@
             <div class="col-12">
                 <div>
                     <h3>Todo List</h3>
+                    <button type="button" class="btn btn-sm btn-secondary" onclick="todoCreateModalOn()">Create New Todo</button>
                 </div>
 
                 <div class="table-responsive" style="min-width: 65rem;">
                     <table class="table table-striped table-sm">
                         <thead>
                             <tr>
-                                <th class="col-2">
+                                <th class="col-1">
                                     ID
                                 </th>
-                                <th class="col-6">
+                                <th class="col-5">
                                     Todo List
+                                </th>
+                                <th class="col-2">
+                                    Created At
                                 </th>
                                 <th class="col-2">
                                     Status
@@ -83,19 +190,21 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>Audit 기능 추가하기</td>
-                                <td>todo</td>
-                                <td><button>완료</button></td>
-                            </tr>
-                        </tbody>
+                        <tbody id="todoList-tbody"></tbody>
                     </table>
                 </div>
             </div>
+
+            <div class="col-12">
+                <div>
+                    Page <span id="dashboard-current-page"></span> of <span id="dashboard-total-page"></span> [ Total <span id="dashboard-total-count"></span> ]
+                </div>
+                <nav id="dashboard-pagination" aria-label="Page navigation"></nav>
+            </div>
         </div>
     </div>
+
+    <div class="modal fade" id="todoCreateModal" style="background: #333333;opacity: 0.9"></div>
 </main>
 </body>
 </html>

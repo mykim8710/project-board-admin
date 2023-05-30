@@ -124,6 +124,8 @@ public class SpringSecurityConfig {
         httpSecurity
                 .authorizeRequests()
 
+                // Admin Management > TodoList
+                .antMatchers("/api/v1/todos/**").authenticated()
 
                 // Admin Management > 관리자 계정 관리
                 .antMatchers(HttpMethod.POST, "/api/v1/admin-users").hasRole("MASTER")

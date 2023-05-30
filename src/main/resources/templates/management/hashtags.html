@@ -5,11 +5,12 @@
 <head>
     <title>해시태그 관리 페이지</title>
     <link>
-    <script>
+    <script th:inline="javascript">
         const pageName = "hashtags";
         let currentPage = 0;
         let sortCondition = "id";
         let sortDirection = "DESC";
+        const auth = [[${#authentication.principal.adminUser.adminUserRole}]];
 
         function findAllHashtags() {
             callFindAllHashtagsApi().then(response => {
@@ -32,8 +33,12 @@
                     const newTr = document.createElement('tr');
                     let html = `<td>${hashtag.id}</td>
                                 <td>${hashtag.name}</td>
-                                <td>${hashtag.createdAt}</td>
-                                <td><button type="button" class="btn btn-danger" onclick="removeHashtag(${hashtag.id})">delete</button></td>`;
+                                <td>${hashtag.createdAt}</td>`
+
+                    if(auth === "ROLE_MASTER") {
+                        html += `<td><button type="button" class="btn btn-danger" onclick="removeHashtag(${hashtag.id})">delete</button></td>`;
+                    }
+
                     newTr.innerHTML = html;
                     hashtagListArea.appendChild(newTr);
                 });
@@ -103,7 +108,7 @@
     </div>
 
     <div class="table-responsive">
-        <div class="col-6">
+        <div class="col-6" sec:authorize="hasRole('ROLE_MASTER')">
             <div class="input-group mb-3">
                 <input type="text" class="form-control" placeholder="add new hashtag" id="hashtagName">
                 <button class="btn btn-primary" type="button" onclick="addNewHashtag()">ADD</button>
@@ -116,7 +121,7 @@
                     <th class="col-3"><button class="btn" onclick="sort('id')">ID</button></th>
                     <th class="col-3"><button class="btn" onclick="sort('name')">해시태그</button></th>
                     <th class="col-3"><button class="btn" onclick="sort('createdAt')">저장일</button></th>
-                    <th class="col-3">메뉴</th>
+                    <th class="col-3" sec:authorize="hasRole('ROLE_MASTER')">메뉴</th>
                 </tr>
             </thead>
             <tbody id="hashtags-tbody"></tbody>

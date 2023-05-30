@@ -5,11 +5,12 @@
 <head>
     <title>게시글 관리 페이지</title>
     <link>
-    <script>
+    <script th:inline="javascript">
         const pageName = "articles";
         let currentPage = 0;
         let sortCondition = "id";
         let sortDirection = "DESC";
+        const auth = [[${#authentication.principal.adminUser.adminUserRole}]];
 
         function findAllArticles() {
             callFindAllArticlesApi().then(response => {
@@ -59,9 +60,13 @@
                                     <p>${articleOne.content}</p>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" id="modalCloseBtn">Close</button>
-                                    <button type="button" class="btn btn-danger" onclick="removeArticleOne(${articleOne.id})">Delete</button>
-                                </div>
+                                    <button type="button" class="btn btn-secondary" id="modalCloseBtn">Close</button>`;
+
+                                    if(auth === "ROLE_MASTER") {
+                                        html += `<button type="button" class="btn btn-danger" onclick="removeArticleOne(${articleOne.id})">Delete</button>`;
+                                    }
+
+                         html += `</div>
                             </div>
                         </div>`;
             modalArea.innerHTML = html;
@@ -128,8 +133,7 @@
 
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <div>
-            Page <span id="articles-current-page"></span> of <span id="articles-total-page"></span> [ Total <span
-                id="articles-total-count"></span> ]
+            Page <span id="articles-current-page"></span> of <span id="articles-total-page"></span> [ Total <span id="articles-total-count"></span> ]
         </div>
         <nav id="articles-pagination" aria-label="Page navigation"></nav>
     </div>

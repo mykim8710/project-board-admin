@@ -1,6 +1,7 @@
 package io.mykim.projectboardadmin.todo.service;
 
 import io.mykim.projectboardadmin.adminuser.entity.AdminUser;
+import io.mykim.projectboardadmin.global.pageable.CustomPaginationResponse;
 import io.mykim.projectboardadmin.global.response.enums.CustomErrorCode;
 import io.mykim.projectboardadmin.global.response.exception.NotFoundExceptionException;
 import io.mykim.projectboardadmin.todo.dto.TodoCreateDto;
@@ -11,6 +12,7 @@ import io.mykim.projectboardadmin.todo.entity.TodoStatus;
 import io.mykim.projectboardadmin.todo.repository.TodoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
@@ -28,7 +30,7 @@ public class TodoService {
 
     @Transactional(readOnly = true)
     public TodoListDto findAllMyTodoList(AdminUser adminUser, Pageable pageable) {
-        Slice<Todo> todos = todoRepository.findAllByAdminUserId(adminUser.getId(), pageable);
+        Page<Todo> todos = todoRepository.findAllByAdminUserId(adminUser.getId(), pageable);
         List<TodoFindDto> todoFindDtos = todos.getContent()
                                                     .stream()
                                                     .map(todo -> TodoFindDto.from(todo))
@@ -36,9 +38,7 @@ public class TodoService {
 
         return TodoListDto.builder()
                             .todoFindDtos(todoFindDtos)
-                            .page(todos.getNumber())
-                            .hasNextPage(todos.hasNext())
-                            .isLast(todos.isLast())
+                .customPaginationResponse(CustomPaginationResponse.of(todos.getTotalElements(), todos.getTotalPages(), todos.getNumber()))
                             .build();
     }
 

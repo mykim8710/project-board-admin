@@ -183,6 +183,7 @@ Spring Boot
 
 ## 데모 페이지
 url :http://ec2-3-36-158-39.ap-northeast-2.compute.amazonaws.com:9090
+테스트 계정 : master/1111
 
 ## CI/CD method
 - 스크립트 작성 후 서버에 저장한 뒤 서버에서 스크립트를 실행하는 방식으로 채택

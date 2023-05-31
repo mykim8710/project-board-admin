@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/layout-main :: layout(~{::title},~{::main},~{::link},~{::script})}"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>게시글 관리 페이지</title>
+    <link>
+    <script th:inline="javascript">
+        const pageName = "articles";
+        let currentPage = 0;
+        let sortCondition = "id";
+        let sortDirection = "DESC";
+        const auth = [[${#authentication.principal.adminUser.adminUserRole}]];
+
+        function findAllArticles() {
+            callFindAllArticlesApi().then(response => {
+                drawArticleListDom(response.data.responseArticleFindDtos);
+                pagination(response.data.paginationResponse);
+            });
+        }
+
+        function drawArticleListDom(articles) {
+            let articleListArea = document.getElementById('articles-tbody');
+            articleListArea.innerText = "";
+
+            if (articles.length == 0) {
+                const newTr = document.createElement('tr');
+                let html = `<td colspan="4">게시글이 없습니다.</td>`;
+                newTr.innerHTML = html;
+                articleListArea.appendChild(newTr);
+            } else {
+                articles.forEach(article => {
+                    const newTr = document.createElement('tr');
+                    let html = `<td>${article.id}</td>
+                                <td><a class="link" onclick="findOneArticle(${article.id})">${article.title}</a></td>
+                                <td>${article.nickname}</td>
+                                <td>${article.createdAt}</td>`;
+                    newTr.innerHTML = html;
+                    articleListArea.appendChild(newTr);
+                });
+            }
+        }
+
+        function findOneArticle(articleId) {
+            callFindOneArticleApi(articleId).then(response => {
+                console.log(response)
+                articleOneModalOn(response.data);
+            });
+        }
+        function articleOneModalOn(articleOne) {
+            const modalArea = document.getElementById("articleOneModal");
+            modalArea.innerText='';
+            let html = `<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="staticBackdropLabel">${articleOne.title}</h1>
+                                </div>
+                                <div class="modal-body">
+                                    <h4>${articleOne.createdAt}</h4>
+                                    <p>${articleOne.content}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" id="modalCloseBtn">Close</button>`;
+
+                                    if(auth === "ROLE_MASTER") {
+                                        html += `<button type="button" class="btn btn-danger" onclick="removeArticleOne(${articleOne.id})">Delete</button>`;
+                                    }
+
+                         html += `</div>
+                            </div>
+                        </div>`;
+            modalArea.innerHTML = html;
+            $('#articleOneModal').show();
+            $('#modalCloseBtn').on('click',function() {
+                $('#articleOneModal').hide();
+            })
+        }
+
+        function removeArticleOne(articleId) {
+            callRemoveArticleApi(articleId).then(response => {
+                if(response.status === 200) {
+                    $('#articleOneModal').hide();
+                    findAllArticles();
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4" id="articles-main">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <div>SERVICE MANAGEMENT > <a href="">게시글 관리</a></div>
+    </div>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">게시글 관리</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group mr-2">
+                <button type="button" class="btn btn-sm btn-outline-secondary">PDF</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary">EXCEL</button>
+            </div>
+
+            <select class="form-select form-select-sm" id="articles-size" onchange="setPageSize()">
+                <option value="5">5줄</option>
+                <option value="10">10줄</option>
+                <option value="20">20줄</option>
+                <option value="30" selected>30줄</option>
+                <option value="50">50줄</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-sm">
+            <thead>
+            <tr>
+                <th>
+                    <button class="btn" onclick="sort('id')">ID</button>
+                </th>
+                <th class="col-8">
+                    <button class="btn" onclick="sort('title')">제목</button>
+                </th>
+                <th class="col-2">
+                    <button class="btn" onclick="sort('user.nickname')">작성자</button>
+                </th>
+                <th class="col-2">
+                    <button class="btn" onclick="sort('createdAt')">작성일</button>
+                </th>
+            </tr>
+            </thead>
+            <tbody id="articles-tbody"></tbody>
+        </table>
+    </div>
+
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <div>
+            Page <span id="articles-current-page"></span> of <span id="articles-total-page"></span> [ Total <span id="articles-total-count"></span> ]
+        </div>
+        <nav id="articles-pagination" aria-label="Page navigation"></nav>
+    </div>
+
+    <div class="modal fade" id="articleOneModal" style="background: #333333;opacity: 0.9"></div>
+</main>
+</body>
+</html>

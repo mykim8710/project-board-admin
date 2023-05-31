@@ -3,7 +3,7 @@ package io.mykim.projectboardadmin.todo.service;
 import io.mykim.projectboardadmin.adminuser.entity.AdminUser;
 import io.mykim.projectboardadmin.global.pageable.CustomPaginationResponse;
 import io.mykim.projectboardadmin.global.response.enums.CustomErrorCode;
-import io.mykim.projectboardadmin.global.response.exception.NotFoundExceptionException;
+import io.mykim.projectboardadmin.global.response.exception.NotFoundException;
 import io.mykim.projectboardadmin.todo.dto.TodoCreateDto;
 import io.mykim.projectboardadmin.todo.dto.TodoFindDto;
 import io.mykim.projectboardadmin.todo.dto.TodoListDto;
@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,7 +50,7 @@ public class TodoService {
 
     @Transactional
     public void updateTodoStatus(Long todoId, TodoStatus todoStatus) {
-        Todo todo = todoRepository.findById(todoId).orElseThrow(() -> new NotFoundExceptionException(CustomErrorCode.NOT_FOUND_TODO));
+        Todo todo = todoRepository.findById(todoId).orElseThrow(() -> new NotFoundException(CustomErrorCode.NOT_FOUND_TODO));
         todo.updateTodoStatus(todoStatus);
     }
 }

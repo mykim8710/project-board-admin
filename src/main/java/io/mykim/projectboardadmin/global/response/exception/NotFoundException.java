@@ -4,10 +4,10 @@ import io.mykim.projectboardadmin.global.response.enums.CustomErrorCode;
 import lombok.Getter;
 
 @Getter
-public class NotFoundExceptionException extends BusinessRollbackException {
+public class NotFoundException extends BusinessRollbackException {
     private CustomErrorCode errorCode;
 
-    public NotFoundExceptionException(CustomErrorCode errorCode) {
+    public NotFoundException(CustomErrorCode errorCode) {
         super(errorCode);
         this.errorCode = errorCode;
     }

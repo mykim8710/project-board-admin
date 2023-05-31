@@ -1,0 +1,36 @@
+debug: false
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type: trace
+
+server:
+  port: 9090
+
+awsParameterStorePropertySource:
+  enabled: true
+
+spring:
+
+  # jpa
+  jpa:
+    open-in-view: false
+    defer-datasource-initialization: false
+    hibernate:
+      ddl-auto: none
+
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+
+  #DB Connection
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${/project-board-admin/cloud-parameter-store_prod/DB_URL}
+    username: ${/project-board-admin/cloud-parameter-store_prod/DB_USERNAME}
+    password: ${/project-board-admin/cloud-parameter-store_prod/DB_PASSWORD}
+
+
+  sql.init.mode: never

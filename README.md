@@ -181,7 +181,7 @@ Spring Boot
     │       └── application.yaml
 ```
 
-## 데모 페이지
+## 데모 페이지(AWS 서버 종료)
 url :http://ec2-3-36-158-39.ap-northeast-2.compute.amazonaws.com:9090
 테스트 계정 : master/1234
 
